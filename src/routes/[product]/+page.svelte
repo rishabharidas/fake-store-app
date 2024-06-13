@@ -91,20 +91,26 @@
 		items.set(updatedItems);
 	}
 
-	onMount(() => {
-		fetch(`https://fakestoreapi.com/products/category/${data.category}`).then(async (res) => {
-			const response = await res.json();
-			categoryData = response.filter((item: productInfo) => item.id != data.id).slice(0, 4);
-		});
+	onMount(async () => {
+		try {
+			await fetch(`https://fakestoreapi.com/products/category/${data.category}`).then(
+				async (res) => {
+					const response = await res.json();
+					categoryData = response.filter((item: productInfo) => item.id != data.id).slice(0, 4);
+				}
+			);
+		} catch (err) {
+			console.log(err);
+		}
 	});
 </script>
 
 <div class="flex flex-col">
-	<div class="py-4 px-[5%]">
+	<div class="py-4 container px-[10%]">
 		<a href="/" class="text-xs">{'< Back to all Products'}</a>
 	</div>
 	<div class="flex justify-center items-start gap-3">
-		<div class="container px-[5%] md:px-0">
+		<div class="container px-[5%] md:px-[2%]">
 			<div class="grid md:grid-cols-2 gap-4">
 				<div class="image-section flex justify-center">
 					<img src={data.image} alt={data.title} class="w-96 object-scale-down" />
@@ -161,7 +167,7 @@
 				<div class="flex justify-between py-6">
 					<span class="font-bold text-2xl">Similar Products</span>
 					<a href="/" class="btn variant-filled rounded-lg">View all products</a>
-				</div> 
+				</div>
 				<div class="flex flex-col md:flex-row gap-6 md:w-auto md:overflow-x-auto">
 					{#each categoryData as product, index}
 						{#key index}

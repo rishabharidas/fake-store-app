@@ -1,9 +1,13 @@
 // export const ssr = false;
 async function getProductDetails(id: string) {
 	let response;
-	await fetch(`https://fakestoreapi.com/products/${id}`).then(
-		async (res) => (response = await res.json())
-	);
+	try {
+		await fetch(`https://fakestoreapi.com/products/${id}`).then(
+			async (res) => (response = await res.json())
+		);
+	} catch (err) {
+		console.log(err);
+	}
 	return response;
 }
 

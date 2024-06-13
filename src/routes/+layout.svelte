@@ -1,12 +1,6 @@
 <script lang="ts">
 	import '../app.postcss';
-	import {
-		AppShell,
-		AppBar,
-		initializeStores,
-		Drawer,
-		getDrawerStore
-	} from '@skeletonlabs/skeleton';
+	import { AppBar, initializeStores, Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 
@@ -51,11 +45,11 @@
 		}
 	}
 
-	let cartItemsCount: number = 0
+	let cartItemsCount: number = 0;
 
 	items.subscribe((value) => {
-		cartItemsCount = value.length ?? 0
-	})
+		cartItemsCount = value.length ?? 0;
+	});
 
 	setContext('scrollEventStore', scrollEventStore);
 
@@ -77,17 +71,18 @@
 	}
 </script>
 
-<!-- App Shell -->
-<AppShell>
-	<svelte:fragment slot="header">
+<div class="w-full h-full flex flex-col overflow-hidden">
+	<header>
 		<!-- App Bar -->
-		<AppBar>
+		<AppBar shadow="shadow-lg" padding="py-3 px-3 md:px-[10%]">
 			<svelte:fragment slot="lead">
-				<strong class="text-xl uppercase">Fake Store</strong>
+				<a href="/"><strong class="text-xl uppercase">Fake Store</strong></a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<div class="relative inline-block">
-					<span class="badge-icon variant-filled-warning absolute -top-0 -right-0 z-10">{cartItemsCount}</span>
+					<span class="badge-icon variant-filled-warning absolute -top-0 -right-0 z-10"
+						>{cartItemsCount}</span
+					>
 					<button class="btn btn-sm" on:click={openDrawer}>
 						<svg
 							class="w-7 h-7 text-gray-800 dark:text-white"
@@ -110,12 +105,12 @@
 				</div>
 			</svelte:fragment>
 		</AppBar>
-	</svelte:fragment>
+	</header>
 	<!-- Page Route Content -->
 	<div bind:this={scrollContainer} style="height: 92vh; overflow-y: auto">
 		<slot />
 	</div>
-</AppShell>
+</div>
 <Drawer
 	bgDrawer="bg-slate-200 text-black"
 	width="w-[280px] md:w-[480px]"
@@ -123,7 +118,7 @@
 	rounded="rounded-lg"
 	position="right"
 >
-	<div class="card h-[98vh] p-4">
+	<div class="card h-[98vh]">
 		<div class="card-header">
 			<span class="text-3xl flex items-center py-3">
 				<svg
@@ -146,6 +141,8 @@
 				Cart
 			</span>
 			<hr />
+		</div>
+		<div class="p-4 h-[90%]">
 			<Cart />
 		</div>
 	</div>

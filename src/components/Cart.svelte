@@ -8,9 +8,8 @@
 	});
 </script>
 
-<div class="flex flex-col gap-3 mt-4 relative justify-between h-[80vh]">
-	<div class="flex flex-col gap-3">
-
+<div class="flex flex-col gap-3 relative justify-between h-full">
+	<div class="flex flex-col gap-3 h-[70%] overflow-x-auto">
 		{#if $items.length}
 			{#each $items as item}
 				<CartItem cartItem={item} />

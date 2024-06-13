@@ -14,12 +14,12 @@
 </script>
 
 <div class="flex justify-start items-center gap-1">
-	<button class="variant-filled w-11 h-11 text-2xl font-bold rounded-lg" on:click={decrementItem}>
+	<button class="variant-filled w-8 md:w-11 h-8 md:h-11 text-2xl font-bold rounded-lg" on:click={decrementItem}>
 		-
 	</button>
-	<input type="text" class="input w-16 rounded-lg" bind:value />
-	<button class="variant-filled w-11 h-11 text-2xl font-bold rounded-lg" on:click={addItem}>
+	<input type="text" class="input w-10 h-8 md:h-auto md:w-16 rounded-lg" bind:value />
+	<button class="variant-filled w-8 md:w-11 h-8 md:h-11 text-2xl font-bold rounded-lg" on:click={addItem}>
 		+
 	</button>
-	{value > 1 ? 'Items' : 'Item'}
+	<span class="hidden md:block">{value > 1 ? 'Items' : 'Item'}</span>
 </div>

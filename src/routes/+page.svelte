@@ -90,11 +90,15 @@
 	}
 
 	async function getProducts() {
-		await fetch(
-			`https://fakestoreapi.com/products${category !== 'all' ? `/category/${category}` : ''}?limit=${pageLimit}&?sort=${sort}`
-		).then(async (res) => {
-			products = await res.json();
-		});
+		try {
+			await fetch(
+				`https://fakestoreapi.com/products${category !== 'all' ? `/category/${category}` : ''}?limit=${pageLimit}&?sort=${sort}`
+			).then(async (res) => {
+				products = await res.json();
+			});
+		} catch (err) {
+			console.log(err);
+		}
 	}
 
 	function capitalize(str: string): string {
@@ -110,9 +114,9 @@
 			class="object-cover w-screen"
 		/>
 	</div>
-	<div class="flex justify-center pt-4">
+	<div class="flex justify-center pt-4 px-3 md:px-1">
 		<div class="container flex flex-col items-center">
-			<div class="px-2 flex justify-between w-full bg-slate-400 py-3 rounded-lg">
+			<div class="px-2 flex justify-between w-full bg-slate-300 py-3 rounded-lg">
 				<div class="w-[26%]">
 					<!-- <label class="label"> -->
 					<!-- <span class="text-xs">Category</span> -->
