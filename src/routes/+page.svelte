@@ -2,8 +2,12 @@
 
 <script lang="ts">
 	import ProductCard from '../components/ProductCard.svelte';
+	import CardPlaceHolder from '../components/CardPlaceHolder.svelte';
+	import Image from '../components/Image.svelte';
+
 	import { onMount, getContext } from 'svelte';
 	import { type Writable } from 'svelte/store';
+	import { toast } from '@zerodevx/svelte-toast';
 
 	interface Data {
 		categories: string[];
@@ -32,6 +36,8 @@
 	let category: string = 'all';
 	let pageLimit: number = 10;
 	let sort: string = 'asc';
+	let loading: boolean = true;
+	let scrollLoading: boolean = false;
 
 	const scrollEventStore: Writable<{
 		scrollTop: number;
@@ -53,7 +59,7 @@
 			// 50px from the bottom
 			if (hasMore) {
 				pageLimit = pageLimit + 6;
-				getProducts();
+				getProducts(true);
 			}
 		}
 	}
@@ -89,7 +95,10 @@
 		};
 	}
 
-	async function getProducts() {
+	async function getProducts(scrollEvent?: boolean) {
+		if (scrollEvent && hasMore) {
+			scrollLoading = true;
+		} else loading = true;
 		try {
 			await fetch(
 				`https://fakestoreapi.com/products${category !== 'all' ? `/category/${category}` : ''}?limit=${pageLimit}&?sort=${sort}`
@@ -98,21 +107,36 @@
 			});
 		} catch (err) {
 			console.log(err);
+			toast.push('Something went wrong. Please try again later', {
+				theme: {
+					'--toastColor': '#ffffff',
+					'--toastBackground': 'rgba(255, 50, 65, 0.8)',
+					'--toastBarBackground': '#a3a3a3'
+				}
+			});
 		}
+		loading = false;
+		scrollLoading = false;
 	}
+
+	function sortBy() {}
 
 	function capitalize(str: string): string {
 		return str.charAt(0).toUpperCase() + str.slice(1);
 	}
 </script>
 
-<div class=" h-auto">
-	<div class="h-[30vh] flex bg-slate-400">
-		<img
+<div class="h-auto">
+	<div class="h-[30vh] flex bg-slate-400 relative">
+		<Image
 			src="https://fakestoreapi.reactbd.com/static/media/intro.21f1953b210a9f6427b5725847c3482c.svg"
 			alt="banner"
 			class="object-cover w-screen"
 		/>
+		<div class="w-full h-full absolute bg-[#f5f5f578]"></div>
+		<div class="w-full absolute flex justify-center bottom-[45%]">
+			<h1 class="text-6xl font-extrabold text-center text-[#4800A3] font-sans tracking-tight underline underline-offset-8">Fake store</h1>
+		</div>
 	</div>
 	<div class="flex justify-center pt-4 px-3 md:px-1">
 		<div class="container flex flex-col items-center">
@@ -141,7 +165,7 @@
 						bind:value={sort}
 						placeholder="Sort by"
 						class="select rounded-lg"
-						on:change={getProducts}
+						on:change={() => getProducts()}
 					>
 						<option value="asc">Sort By - Asc</option>
 						<option value="desc">Sort By - Desc</option>
@@ -149,8 +173,14 @@
 					<!-- </label> -->
 				</div>
 			</div>
-			<div class="py-8 grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-				{#if products && products.length}
+			<div
+				class="py-8 grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 w-full"
+			>
+				{#if loading}
+					{#each Array(10) as item, index}
+						<CardPlaceHolder />
+					{/each}
+				{:else if products && products.length}
 					{#each products as product, index}
 						{#key index}
 							<ProductCard
@@ -162,6 +192,10 @@
 							/>
 						{/key}
 					{/each}
+					{#if scrollLoading}
+						<CardPlaceHolder />
+						<CardPlaceHolder />
+					{/if}
 				{/if}
 			</div>
 		</div>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { items } from '$lib/store/cart';
 	import AddRemoveItem from './AddRemoveItem.svelte';
+  import Image from './Image.svelte';
 
 	interface Product {
 		id: number;
@@ -46,7 +47,7 @@
 
 <div class="flex justify-center items-center gap-3 bg-gray-300 rounded-lg px-2 max-h-[100px]">
 	<div class="w-[40%] flex justify-center items-center object-contain h-auto">
-		<img src={cartItem.image} alt={cartItem.name} class="object-contain h-[90px]" />
+		<Image loading="lazy" src={cartItem.image} alt={cartItem.name} class="object-contain h-[90px]" />
 	</div>
 	<div class="w-[60%] h-32 flex flex-col justify-center gap-2">
 		<span class="line-clamp-1">{cartItem.name}</span>

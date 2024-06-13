@@ -25,6 +25,7 @@
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
 	import { items } from '$lib/store/cart';
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 
 	import Cart from '../components/Cart.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
@@ -35,6 +36,8 @@
 		clientHeight: number;
 	} | null>(null);
 
+	let cartItemsCount: number = 0;
+
 	function runEvent() {
 		if (scrollContainer) {
 			const scrollTop = scrollContainer.scrollTop;
@@ -44,8 +47,6 @@
 			scrollEventStore.set({ scrollTop, scrollHeight, clientHeight });
 		}
 	}
-
-	let cartItemsCount: number = 0;
 
 	items.subscribe((value) => {
 		cartItemsCount = value.length ?? 0;
@@ -74,9 +75,11 @@
 <div class="w-full h-full flex flex-col overflow-hidden">
 	<header>
 		<!-- App Bar -->
-		<AppBar shadow="shadow-lg" padding="py-3 px-3 md:px-[10%]">
+		<AppBar shadow="shadow-2xl" padding="py-3 px-3 md:px-[9%]">
 			<svelte:fragment slot="lead">
-				<a href="/"><strong class="text-xl uppercase">Fake Store</strong></a>
+				<a data-sveltekit-preload-data href="/">
+					<strong class="text-xl uppercase">Fake Store</strong>
+				</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<div class="relative inline-block">
@@ -107,7 +110,7 @@
 		</AppBar>
 	</header>
 	<!-- Page Route Content -->
-	<div bind:this={scrollContainer} style="height: 92vh; overflow-y: auto">
+	<div bind:this={scrollContainer} style="height: 92vh; overflow-y: auto" class="bg-slate-200">
 		<slot />
 	</div>
 </div>
@@ -147,3 +150,4 @@
 		</div>
 	</div>
 </Drawer>
+<SvelteToast />

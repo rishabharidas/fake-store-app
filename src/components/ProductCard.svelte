@@ -3,6 +3,7 @@
 	import { icons } from '$lib/utils/icons';
 	import { capitalize } from '$lib/utils/common';
 	import { createEventDispatcher } from 'svelte';
+	import Image from './Image.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -21,7 +22,6 @@
 		image: string;
 	}
 	export let productData: productInfo;
-	console.log(productData, '<>>>>>');
 
 	function sortCategory(category: string) {
 		dispatch('categorySelect', category);
@@ -29,13 +29,14 @@
 </script>
 
 <div
-	class="card shadow-xl rounded-xl flex gap-4 h-[250px] md:flex-col md:gap-2 md:h-[500px] overflow-hidden"
+	class="card shadow-lg rounded-xl flex gap-4 h-[250px] md:flex-col md:gap-2 md:h-[500px] overflow-hidden"
 >
 	<a
+		data-sveltekit-preload-data
 		href="/{productData.id}"
 		class="w-[50%] bg-white h-auto md:h-[50%] md:w-auto flex justify-center"
 	>
-		<img src={productData.image} alt={productData.title} class="object-contain px-2" />
+		<Image src={productData.image} alt={productData.title} class="object-contain px-2" />
 	</a>
 	<div class="p-4 flex flex-col w-[50%] md:w-[100%] md:h-[50%] gap-3 md:gap-1 md:justify-between">
 		<button
@@ -44,7 +45,7 @@
 		>
 			{capitalize(productData.category)}
 		</button>
-		<a href="/{productData.id}">
+		<a data-sveltekit-preload-data href="/{productData.id}">
 			<span class="text-lg font-medium line-clamp-2 min-h-14">{productData.title}</span>
 		</a>
 
@@ -67,7 +68,7 @@
 				</svelte:fragment>
 			</Ratings>
 		</div>
-		<div class="h-[20%] overflow-hidden">
+		<div class="hidden md:block h-[21%] overflow-hidden">
 			<span class="text-base line-clamp-2">{productData.description}</span>
 		</div>
 		<span class="text-3xl md:text-2xl font-bold">$ {parseFloat(productData.price).toFixed(2)}</span>

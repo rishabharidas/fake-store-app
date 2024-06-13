@@ -6,6 +6,8 @@
 	import { onMount, onDestroy } from 'svelte';
 	import ProductCard from '../../components/ProductCard.svelte';
 	import AddRemoveItem from '../../components/AddRemoveItem.svelte';
+	import Image from '../../components/Image.svelte';
+	import { toast } from '@zerodevx/svelte-toast';
 
 	interface Rating {
 		rate: number;
@@ -101,19 +103,26 @@
 			);
 		} catch (err) {
 			console.log(err);
+			toast.push('Something went wrong. Please try again later', {
+				theme: {
+					'--toastColor': '#ffffff',
+					'--toastBackground': 'rgba(255, 50, 65, 0.8)',
+					'--toastBarBackground': '#a3a3a3'
+				}
+			});
 		}
 	});
 </script>
 
 <div class="flex flex-col">
 	<div class="py-4 container px-[10%]">
-		<a href="/" class="text-xs">{'< Back to all Products'}</a>
+		<a data-sveltekit-preload-data href="/" class="text-xs">{'< Back to all Products'}</a>
 	</div>
 	<div class="flex justify-center items-start gap-3">
 		<div class="container px-[5%] md:px-[2%]">
 			<div class="grid md:grid-cols-2 gap-4">
 				<div class="image-section flex justify-center">
-					<img src={data.image} alt={data.title} class="w-96 object-scale-down" />
+					<Image loading="lazy" src={data.image} alt={data.title} class="w-96 object-scale-down" />
 				</div>
 				<div class="flex flex-col gap-3 py-10">
 					<div class="flex flex-col gap-3">
@@ -166,7 +175,9 @@
 			<div class="flex flex-col py-8">
 				<div class="flex justify-between py-6">
 					<span class="font-bold text-2xl">Similar Products</span>
-					<a href="/" class="btn variant-filled rounded-lg">View all products</a>
+					<a data-sveltekit-preload-data href="/" class="btn variant-filled rounded-lg">
+						View all products
+					</a>
 				</div>
 				<div class="flex flex-col md:flex-row gap-6 md:w-auto md:overflow-x-auto">
 					{#each categoryData as product, index}
