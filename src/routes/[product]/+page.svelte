@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { items } from './../../lib/store/cart';
 	import { Ratings } from '@skeletonlabs/skeleton';
-	import common from '$lib/utils/common';
+	import { capitalize } from '$lib/utils/common';
 	import { icons } from '$lib/utils/icons';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import ProductCard from '../../components/ProductCard.svelte';
+	import AddRemoveItem from '../../components/AddRemoveItem.svelte';
 
 	interface Rating {
 		rate: number;
@@ -19,22 +21,86 @@
 		rating: Rating;
 		image: string;
 	}
+
+	interface CartProduct {
+		id: number;
+		name: string;
+		price: string;
+		count: number;
+		image: string;
+	}
+
 	export let data: productInfo;
 
 	let categoryData: productInfo[] = [];
+	let cartProductInfo: CartProduct | undefined;
+	let quantity: number = 0;
+
+	// Function to update cartProductInfo and quantity reactively
+	function updateCartProductInfo(value) {
+		cartProductInfo = value.find((item) => item.id == data.id);
+		quantity = cartProductInfo?.count ?? 0;
+	}
+
+	// Set up subscription on mount and clean up on destroy
+	onMount(() => {
+		const unsubscribe = items.subscribe((value) => {
+			updateCartProductInfo(value);
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	});
+
+	function addToCart() {
+		const itemIndex = $items.findIndex((item) => item.id == data.id);
+		if (itemIndex !== -1) {
+			const updatedItems = [...$items];
+			updatedItems[itemIndex].count++;
+			items.set(updatedItems);
+		} else {
+			items.update((currentItems) => [
+				...currentItems,
+				{
+					id: data.id,
+					name: data.title,
+					price: data.price,
+					image: data.image,
+					count: 1
+				}
+			]);
+		}
+	}
+
+	function removeFromCart() {
+		const updatedItems = $items
+			.map((item) => {
+				if (item.id === data.id) {
+					const updatedCount = item.count - 1;
+					if (updatedCount <= 0) {
+						return null; // Remove the item
+					} else {
+						return { ...item, count: updatedCount };
+					}
+				}
+				return item;
+			})
+			.filter((item) => item !== null) as CartProduct[];
+
+		items.set(updatedItems);
+	}
 
 	onMount(() => {
-		let response;
 		fetch(`https://fakestoreapi.com/products/category/${data.category}`).then(async (res) => {
-			response = await res.json();
-			console.log(response.filter((item: productInfo) => item.id != data.id));
-			categoryData = response.filter((item: productInfo) => item.id != data.id);
+			const response = await res.json();
+			categoryData = response.filter((item: productInfo) => item.id != data.id).slice(0, 4);
 		});
 	});
 </script>
 
 <div class="flex flex-col">
-	<div class=" py-4 px-[5%]">
+	<div class="py-4 px-[5%]">
 		<a href="/" class="text-xs">{'< Back to all Products'}</a>
 	</div>
 	<div class="flex justify-center items-start gap-3">
@@ -50,7 +116,7 @@
 								{data.title}
 							</span>
 							<span class="text-lg">
-								{common.capitalize(data.category)}
+								{capitalize(data.category)}
 							</span>
 						</div>
 						<div class="">
@@ -69,7 +135,19 @@
 						</div>
 						<span class="text-3xl font-bold">${parseFloat(data.price).toFixed(2)}</span>
 						<div class="flex justify-start gap-6">
-							<button class="btn variant-filled p-4 min-w-32">Add to Cart</button>
+							{#key quantity}
+								{#if quantity > 0}
+									<AddRemoveItem
+										bind:value={quantity}
+										on:decrement={removeFromCart}
+										on:increment={addToCart}
+									/>
+								{:else}
+									<button class="btn variant-filled rounded-lg p-3 min-w-32" on:click={addToCart}>
+										Add to Cart
+									</button>
+								{/if}
+							{/key}
 						</div>
 					</div>
 					<hr class="my-4" />
@@ -82,12 +160,14 @@
 			<div class="flex flex-col py-8">
 				<div class="flex justify-between py-6">
 					<span class="font-bold text-2xl">Similar Products</span>
-					<span>scrollables</span>
-				</div>
-				<div class="grid grid-cols-4 gap-6">
+					<a href="/" class="btn variant-filled rounded-lg">View all products</a>
+				</div> 
+				<div class="flex flex-col md:flex-row gap-6 md:w-auto md:overflow-x-auto">
 					{#each categoryData as product, index}
 						{#key index}
-							<ProductCard productData={product} />
+							<div class="md:w-64">
+								<ProductCard productData={product} />
+							</div>
 						{/key}
 					{/each}
 				</div>
@@ -95,3 +175,9 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	:global(::-webkit-scrollbar) {
+		display: none !important;
+	}
+</style>

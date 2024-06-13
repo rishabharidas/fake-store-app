@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Ratings } from '@skeletonlabs/skeleton';
 	import { icons } from '$lib/utils/icons';
-	import common from '$lib/utils/common';
+	import { capitalize } from '$lib/utils/common';
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
@@ -28,7 +28,9 @@
 	}
 </script>
 
-<div class="card shadow-xl rounded-xl flex gap-4 h-[250px] md:flex-col md:gap-2 md:h-[500px] overflow-hidden">
+<div
+	class="card shadow-xl rounded-xl flex gap-4 h-[250px] md:flex-col md:gap-2 md:h-[500px] overflow-hidden"
+>
 	<a
 		href="/{productData.id}"
 		class="w-[50%] bg-white h-auto md:h-[50%] md:w-auto flex justify-center"
@@ -40,7 +42,7 @@
 			class="text-sm underline flex justify-start"
 			on:click|stopPropagation={() => sortCategory(productData.category)}
 		>
-			{common.capitalize(productData.category)}
+			{capitalize(productData.category)}
 		</button>
 		<a href="/{productData.id}">
 			<span class="text-lg font-medium line-clamp-2 min-h-14">{productData.title}</span>
@@ -48,7 +50,12 @@
 
 		<div class="flex gap-1">
 			<span class="underline">{productData.rating.count}</span>
-			<Ratings value={productData.rating.rate} max={5} fill="fill-red-500" justify="justify-start">
+			<Ratings
+				value={productData.rating.rate}
+				max={5}
+				fill="fill-red-500"
+				justify="justify-start items-center"
+			>
 				<svelte:fragment slot="empty">
 					{@html icons.starEmpty}
 				</svelte:fragment>

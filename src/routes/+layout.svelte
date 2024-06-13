@@ -10,8 +10,6 @@
 	import { onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 
-	import type { DrawerSettings, DrawerStore } from '@skeletonlabs/skeleton';
-
 	// Highlight JS
 	import hljs from 'highlight.js/lib/core';
 	import 'highlight.js/styles/github-dark.css';
@@ -32,6 +30,9 @@
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
+	import { items } from '$lib/store/cart';
+
+	import Cart from '../components/Cart.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
 	const scrollEventStore = writable<{
@@ -49,6 +50,12 @@
 			scrollEventStore.set({ scrollTop, scrollHeight, clientHeight });
 		}
 	}
+
+	let cartItemsCount: number = 0
+
+	items.subscribe((value) => {
+		cartItemsCount = value.length ?? 0
+	})
 
 	setContext('scrollEventStore', scrollEventStore);
 
@@ -79,25 +86,28 @@
 				<strong class="text-xl uppercase">Fake Store</strong>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<button class="btn btn-sm" on:click={openDrawer}>
-					<svg
-						class="w-6 h-6 text-gray-800 dark:text-white"
-						aria-hidden="true"
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke="currentColor"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
-						/>
-					</svg>
-				</button>
+				<div class="relative inline-block">
+					<span class="badge-icon variant-filled-warning absolute -top-0 -right-0 z-10">{cartItemsCount}</span>
+					<button class="btn btn-sm" on:click={openDrawer}>
+						<svg
+							class="w-7 h-7 text-gray-800 dark:text-white"
+							aria-hidden="true"
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<path
+								stroke="currentColor"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
+							/>
+						</svg>
+					</button>
+				</div>
 			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>
@@ -113,7 +123,7 @@
 	rounded="rounded-lg"
 	position="right"
 >
-	<div class="card h-screen p-4">
+	<div class="card h-[98vh] p-4">
 		<div class="card-header">
 			<span class="text-3xl flex items-center py-3">
 				<svg
@@ -135,7 +145,8 @@
 				</svg>
 				Cart
 			</span>
-			<hr/>
+			<hr />
+			<Cart />
 		</div>
 	</div>
 </Drawer>

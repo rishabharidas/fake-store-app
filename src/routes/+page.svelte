@@ -51,7 +51,6 @@
 		// Check if the user has scrolled to the bottom
 		if (scrollTop + clientHeight >= scrollHeight - 50) {
 			// 50px from the bottom
-			console.log('Scrolled to the bottom . . .');
 			if (hasMore) {
 				pageLimit = pageLimit + 6;
 				getProducts();

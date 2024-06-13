@@ -1,3 +1,4 @@
+// export const ssr = false;
 async function getProductDetails(id: string) {
 	let response;
 	await fetch(`https://fakestoreapi.com/products/${id}`).then(
