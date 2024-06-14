@@ -17,11 +17,11 @@
 		{/if}
 	</div>
 	<div class="w-full flex flex-col gap-4 absolute bottom-0">
-		<div class="p-4 border border-slate-500">
+		<div class="p-4 border border-slate-500 rounded-lg">
 			<span class="text-2xl font-base">
 				Total: <span class="font-semibold">$ {formatMoney(totalAmount.toString())}</span>
 			</span>
 		</div>
-		<button class="btn variant-filled p-4 font-bold">Buy now</button>
+		<button class="btn variant-filled p-4 font-bold rounded-lg">Buy now</button>
 	</div>
 </div>
