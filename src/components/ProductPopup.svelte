@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { items } from './../../lib/store/cart';
-	import { Ratings, getDrawerStore } from '@skeletonlabs/skeleton';
+	import { items } from '$lib/store/cart';
+	import { Ratings, getModalStore, getDrawerStore } from '@skeletonlabs/skeleton';
 	import { capitalize } from '$lib/utils/common';
 	import { icons } from '$lib/utils/icons';
 	import { onMount } from 'svelte';
-	import ProductCard from '../../components/ProductCard.svelte';
-	import AddRemoveItem from '../../components/AddRemoveItem.svelte';
-	import Image from '../../components/Image.svelte';
-	import { toast } from '@zerodevx/svelte-toast';
+	import AddRemoveItem from './AddRemoveItem.svelte';
+	import Image from './Image.svelte';
 
 	interface Rating {
 		rate: number;
@@ -33,7 +31,7 @@
 	}
 
 	export let data: productInfo;
-
+	const modalStore = getModalStore();
 	const drawerStore = getDrawerStore();
 
 	let categoryData: productInfo[] = [];
@@ -95,43 +93,42 @@
 		items.set(updatedItems);
 	}
 
-	function openCart() {
-		drawerStore.open();
+	function closeModal() {
+		modalStore.close();
 	}
 
-	onMount(async () => {
-		try {
-			await fetch(`https://fakestoreapi.com/products/category/${data.category}`).then(
-				async (res) => {
-					const response = await res.json();
-					categoryData = response.filter((item: productInfo) => item.id != data.id).slice(0, 4);
-				}
-			);
-		} catch (err) {
-			console.log(err);
-			toast.push('Something went wrong. Please try again later', {
-				theme: {
-					'--toastColor': '#ffffff',
-					'--toastBackground': 'rgba(255, 50, 65, 0.8)',
-					'--toastBarBackground': '#a3a3a3'
-				}
-			});
-		}
-	});
+	function openCart() {
+		closeModal();
+		drawerStore.open();
+	}
 </script>
 
-<div class="flex flex-col">
-	<div class="flex justify-center items-start gap-3 pt-6">
+<div
+	class="flex md:flex-col bg-slate-50 max-w-[95%] md:max-w-[60%] max-h-[60%] rounded-lg p-4 relative"
+>
+	<button class="absolute -top-4 -right-2 w-7" on:click={closeModal}>
+		{@html icons.closeMark}
+	</button>
+	<div class="flex flex-col justify-center items-start gap-3">
 		<div class="container px-[5%] md:px-[2%]">
 			<div class="grid md:grid-cols-2 gap-4">
 				<div class="image-section flex justify-center">
-					<Image loading="lazy" src={data.image} alt={data.title} class="w-96 object-scale-down" />
+					<a data-sveltekit-preload-data href="/{data.id}" on:click={closeModal}>
+						<Image
+							loading="lazy"
+							src={data.image}
+							alt={data.title}
+							class="max-w-60 object-scale-down"
+						/>
+					</a>
 				</div>
-				<div class="flex flex-col gap-3 py-10">
+				<div class="flex flex-col justify-center gap-3 py-5">
 					<div class="flex flex-col gap-3">
 						<div class="flex flex-col gap-1">
 							<span class="text-3xl font-bold">
-								{data.title}
+								<a data-sveltekit-preload-data href="/{data.id}" on:click={closeModal}>
+									{data.title}</a
+								>
 							</span>
 							<span class="text-lg">
 								{capitalize(data.category)}
@@ -173,28 +170,6 @@
 							{/key}
 						</div>
 					</div>
-					<hr class="my-4" />
-					<div class="flex flex-col">
-						<span class="text-lg pb-3 text-slate-600"> More about Product </span>
-						<span>{@html data.description}</span>
-					</div>
-				</div>
-			</div>
-			<div class="flex flex-col py-8">
-				<div class="flex justify-between py-6">
-					<span class="font-bold text-2xl">Similar Products</span>
-					<a data-sveltekit-preload-data href="/" class="btn variant-filled rounded-lg">
-						View all products
-					</a>
-				</div>
-				<div class="flex flex-col md:flex-row gap-6 md:w-auto md:overflow-x-auto">
-					{#each categoryData as product, index}
-						{#key index}
-							<div class="md:w-64">
-								<ProductCard productData={product} />
-							</div>
-						{/key}
-					{/each}
 				</div>
 			</div>
 		</div>

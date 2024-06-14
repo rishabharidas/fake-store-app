@@ -75,10 +75,10 @@
 <div class="w-full h-full flex flex-col overflow-hidden">
 	<header>
 		<!-- App Bar -->
-		<AppBar shadow="shadow-2xl" padding="py-3 px-3 md:px-[9%]">
+		<AppBar shadow="shadow-2xl" padding="py-3 px-3 md:px-[9%]" background="bg-slate-400">
 			<svelte:fragment slot="lead">
 				<a data-sveltekit-preload-data href="/">
-					<strong class="text-xl uppercase">Fake Store</strong>
+					<strong class="text-xl text-[#4800A3] font-sans tracking-tight capitalize italic">Fake Store</strong>
 				</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">

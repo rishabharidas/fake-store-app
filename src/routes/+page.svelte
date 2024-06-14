@@ -35,9 +35,18 @@
 	let storeCategories: string[] = data.categories;
 	let category: string = 'all';
 	let pageLimit: number = 10;
-	let sort: string = 'asc';
+	let sort: string = 'default';
 	let loading: boolean = true;
 	let scrollLoading: boolean = false;
+	let sortTypes: { type: string; label: string }[] = [
+		{ type: 'default', label: 'Default' },
+		{ type: 'popular', label: 'Most Popular' },
+		{
+			type: 'price_l-h',
+			label: 'Price Low to High'
+		},
+		{ type: 'price_h-l', label: 'Price High to Low' }
+	];
 
 	const scrollEventStore: Writable<{
 		scrollTop: number;
@@ -101,9 +110,10 @@
 		} else loading = true;
 		try {
 			await fetch(
-				`https://fakestoreapi.com/products${category !== 'all' ? `/category/${category}` : ''}?limit=${pageLimit}&?sort=${sort}`
+				`https://fakestoreapi.com/products${category !== 'all' ? `/category/${category}` : ''}?limit=${pageLimit}`
 			).then(async (res) => {
 				products = await res.json();
+				sort = 'default';
 			});
 		} catch (err) {
 			console.log(err);
@@ -119,7 +129,17 @@
 		scrollLoading = false;
 	}
 
-	function sortBy() {}
+	function sortBy() {
+		if (sort === 'popular') {
+			products = products.sort((item1, item2) => item2.rating.rate - item1.rating.rate);
+		} else if (sort === 'price_l-h') {
+			products = products.sort((item1, item2) => Number(item1.price) - Number(item2.price));
+		} else if (sort === 'price_h-l') {
+			products = products.sort((item1, item2) => Number(item2.price) - Number(item1.price));
+		} else {
+			getProducts();
+		}
+	}
 
 	function capitalize(str: string): string {
 		return str.charAt(0).toUpperCase() + str.slice(1);
@@ -133,44 +153,50 @@
 			alt="banner"
 			class="object-cover w-screen"
 		/>
-		<div class="w-full h-full absolute bg-[#f5f5f578]"></div>
+		<div class="w-full h-full absolute bg-[#cccccc9e]"></div>
 		<div class="w-full absolute flex justify-center bottom-[45%]">
-			<h1 class="text-6xl font-extrabold text-center text-[#4800A3] font-sans tracking-tight underline underline-offset-8">Fake store</h1>
+			<h1
+				class="text-6xl font-extrabold text-center text-[#4800A3] font-sans tracking-tight capitalize italic"
+			>
+				Fake store
+			</h1>
 		</div>
 	</div>
 	<div class="flex justify-center pt-4 px-3 md:px-1">
 		<div class="container flex flex-col items-center">
-			<div class="px-2 flex justify-between w-full bg-slate-300 py-3 rounded-lg">
-				<div class="w-[26%]">
-					<!-- <label class="label"> -->
-					<!-- <span class="text-xs">Category</span> -->
-					<select
-						class="select rounded-lg"
-						placeholder="Category"
-						bind:value={category}
-						on:change={getCategoryProducts}
-					>
-						{#each storeCategories as category, index}
-							{#key index}
-								<option value={category}>{capitalize(category)}</option>
-							{/key}
-						{/each}
-					</select>
-					<!-- </label> -->
+			<div class="px-2 flex justify-between w-full bg-slate-300 pb-3 pt-1 rounded-lg">
+				<div class="w-[40%] md:w-[26%]">
+					<label class="label">
+						<span class="text-xs pl-1">Category</span>
+						<select
+							class="select rounded-lg mt-0"
+							placeholder="Category"
+							bind:value={category}
+							id="categories-list"
+							on:change={getCategoryProducts}
+						>
+							{#each storeCategories as category, index}
+								{#key index}
+									<option value={category}>{capitalize(category)}</option>
+								{/key}
+							{/each}
+						</select>
+					</label>
 				</div>
-				<div class="w-[26%]">
-					<!-- <label class="label">
-						<span class="text-xs">Sort</span> -->
-					<select
-						bind:value={sort}
-						placeholder="Sort by"
-						class="select rounded-lg"
-						on:change={() => getProducts()}
-					>
-						<option value="asc">Sort By - Asc</option>
-						<option value="desc">Sort By - Desc</option>
-					</select>
-					<!-- </label> -->
+				<div class="w-[40%] md:w-[30%]">
+					<label class="label">
+						<span class="text-xs pl-1">Sort By</span>
+						<select
+							bind:value={sort}
+							placeholder="Sort by"
+							class="select rounded-lg mt-0"
+							on:change={() => sortBy()}
+						>
+							{#each sortTypes as sortType}
+								<option value={sortType.type}>{sortType.label}</option>
+							{/each}
+						</select>
+					</label>
 				</div>
 			</div>
 			<div
