@@ -29,7 +29,7 @@
 </script>
 
 <button
-	class="card shadow-lg rounded-xl flex gap-4 h-[250px] md:flex-col md:gap-2 md:h-[500px] overflow-hidden touch-styler"
+	class="card shadow-lg hover:shadow-xl hover:drop-shadow-2xl rounded-xl flex gap-2 h-[250px] md:flex-col md:h-[500px] overflow-hidden touch-styler w-full"
 	on:click|preventDefault={showPreviewPopUp}
 >
 	<a
@@ -40,7 +40,9 @@
 	>
 		<Image src={productData.image} alt={productData.title} class="object-contain px-2" />
 	</a>
-	<div class="p-4 flex flex-col w-[50%] md:w-[100%] md:h-[50%] gap-3 md:gap-1 md:justify-between">
+	<div
+		class="py-4 pr-4 pl-2 md:pl-4 flex flex-col w-[50%] md:w-[100%] md:h-[50%] gap-3 md:gap-1 md:justify-between"
+	>
 		<button
 			class="text-sm underline flex justify-start"
 			on:click|stopPropagation={() => sortCategory(productData.category)}
@@ -92,7 +94,7 @@
 />
 
 <style>
-	.touch-styler {
+	:global(.touch-styler) {
 		-webkit-tap-highlight-color: transparent;
 	}
 </style>

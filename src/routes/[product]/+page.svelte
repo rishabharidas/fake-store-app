@@ -102,9 +102,9 @@
 <div class="flex flex-col">
 	<div class="flex justify-center items-start gap-3 pt-6">
 		<div class="container px-[5%] md:px-[2%]">
-			<div class="grid md:grid-cols-2 gap-4">
-				<div class="image-section flex justify-center items-center">
-					<Image loading="lazy" src={data.image} alt={data.title} class="w-96 object-scale-down" />
+			<div class="grid md:grid-cols-2 gap-4 place-items-center">
+				<div class="image-section flex justify-center items-center w-64 h-64 md:w-96 md:h-96">
+					<Image loading="lazy" src={data.image} alt={data.title} class=" w-64 h-64 md:w-96 md:h-96 object-scale-down" />
 				</div>
 				<div class="flex flex-col gap-3 py-10">
 					<div class="flex flex-col gap-3">
@@ -132,24 +132,22 @@
 						</div>
 						<span class="text-3xl font-bold">${parseFloat(data.price).toFixed(2)}</span>
 						<div class="flex justify-start gap-6">
-							{#key quantity}
-								{#if quantity > 0}
-									<div class="flex flex-col gap-4">
-										<AddRemoveItem
-											bind:value={quantity}
-											on:decrement={removeFromCart}
-											on:increment={addToCart}
-										/>
-										<button class="btn variant-filled rounded-lg" on:click={openCart}>
-											Go to Cart
-										</button>
-									</div>
-								{:else}
-									<button class="btn variant-filled rounded-lg p-3 min-w-32" on:click={addToCart}>
-										Add to Cart
+							{#if quantity > 0}
+								<div class="flex flex-col gap-4">
+									<AddRemoveItem
+										bind:value={quantity}
+										on:decrement={removeFromCart}
+										on:increment={addToCart}
+									/>
+									<button class="btn variant-filled rounded-lg" on:click={openCart}>
+										Go to Cart
 									</button>
-								{/if}
-							{/key}
+								</div>
+							{:else}
+								<button class="btn variant-filled rounded-lg p-3 min-w-32" on:click={addToCart}>
+									Add to Cart
+								</button>
+							{/if}
 						</div>
 					</div>
 					<hr class="my-4" />
@@ -159,17 +157,17 @@
 					</div>
 				</div>
 			</div>
-			<div class="flex flex-col py-8">
+			<div class="flex flex-col py-8 w-full">
 				<div class="flex justify-between py-6">
 					<span class="font-bold text-2xl">Similar Products</span>
 					<a data-sveltekit-preload-data href="/" class="btn variant-filled rounded-lg">
 						View all products
 					</a>
 				</div>
-				<div class="flex flex-col md:flex-row gap-6 md:w-auto md:overflow-x-auto">
+				<div class="flex flex-col md:flex-row gap-6 w-full md:w-auto md:overflow-x-auto">
 					{#each categoryData as product, index}
 						{#key index}
-							<div class="md:w-64">
+							<div class="w-full md:w-64">
 								<ProductCard productData={product} />
 							</div>
 						{/key}

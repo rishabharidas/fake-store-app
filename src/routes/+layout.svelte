@@ -77,18 +77,18 @@
 		<!-- App Bar -->
 		<AppBar shadow="shadow-2xl" padding="py-3 px-3 md:px-[9%]" background="bg-slate-400">
 			<svelte:fragment slot="lead">
-				<a data-sveltekit-preload-data href="/">
+				<a data-sveltekit-preload-data href="/" class="touch-styler">
 					<strong class="text-xl text-[#4800A3] font-sans tracking-tight capitalize italic"
 						>Fake Store</strong
 					>
 				</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<div class="relative inline-block">
+				<button class="relative inline-block touch-styler" on:click={openDrawer}>
 					<span class="badge-icon variant-filled-warning absolute -top-0 -right-0 z-10"
 						>{cartItemsCount}</span
 					>
-					<button class="btn btn-sm" on:click={openDrawer}>
+					<div class="btn btn-sm">
 						<svg
 							class="w-7 h-7 text-gray-800 dark:text-white"
 							aria-hidden="true"
@@ -106,14 +106,22 @@
 								d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
 							/>
 						</svg>
-					</button>
-				</div>
+					</div>
+				</button>
 			</svelte:fragment>
 		</AppBar>
 	</header>
 	<!-- Page Route Content -->
-	<div bind:this={scrollContainer} style="height: 92vh; overflow-y: auto" class="bg-slate-200">
+	<div
+		bind:this={scrollContainer}
+		style="height: 93vh; overflow-y: auto"
+		class="bg-slate-200 flex flex-col justify-between"
+	>
 		<slot />
+		<footer class="w-full py-5 px-3 md:px-[9%] flex justify-between items-center bg-slate-400">
+			<span>fake store ltd</span>
+			<span> © {new Date().getFullYear()}</span>
+		</footer>
 	</div>
 </div>
 <Drawer
