@@ -10,7 +10,7 @@
 	import type { productInfo, CartProduct } from '$lib/interface';
 
 	export let data: productInfo;
-	export const parent:any = '';
+	export const parent: any = '';
 
 	const modalStore = getModalStore();
 	const drawerStore = getDrawerStore();
@@ -84,22 +84,20 @@
 	}
 </script>
 
-<div
-	class="flex md:flex-col bg-slate-50 max-w-[95%] md:max-w-[60%] h-full rounded-lg p-4 relative"
->
+<div class="flex md:flex-col bg-slate-50 max-w-[95%] md:max-w-[60%] h-full rounded-lg p-4 relative">
 	<button class="absolute -top-4 -right-2 w-7" on:click={closeModal}>
 		{@html icons.closeMark}
 	</button>
 	<div class="flex flex-col justify-center items-start gap-1 md:gap-3">
 		<div class="container px-[5%] md:px-[2%]">
-			<div class="grid md:grid-cols-2 gap-2 md:gap-4">
-				<div class="image-section flex justify-center items-center">
+			<div class="grid md:grid-cols-2 gap-2 md:gap-4 place-items-center">
+				<div class="image-section flex justify-center items-center w-32 md:w-60:">
 					<a data-sveltekit-preload-data href="/{data.id}" on:click={closeModal}>
 						<Image
 							loading="lazy"
 							src={data.image}
 							alt={data.title}
-							class="w-32 md:max-w-60 object-scale-down"
+							class="object-scale-down h-48"
 						/>
 					</a>
 				</div>

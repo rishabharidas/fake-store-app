@@ -29,7 +29,7 @@
 </script>
 
 <button
-	class="card shadow-lg rounded-xl flex gap-4 h-[250px] md:flex-col md:gap-2 md:h-[500px] overflow-hidden"
+	class="card shadow-lg rounded-xl flex gap-4 h-[250px] md:flex-col md:gap-2 md:h-[500px] overflow-hidden touch-styler"
 	on:click|preventDefault={showPreviewPopUp}
 >
 	<a
@@ -90,3 +90,9 @@
 	transitionInParams={{ duration: 400 }}
 	regionBackdrop="bg-black/[0.15]"
 />
+
+<style>
+	.touch-styler {
+		-webkit-tap-highlight-color: transparent;
+	}
+</style>
