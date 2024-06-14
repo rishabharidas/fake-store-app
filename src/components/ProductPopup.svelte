@@ -10,7 +10,7 @@
 	import type { productInfo, CartProduct } from '$lib/interface';
 
 	export let data: productInfo;
-	export let parent: any;
+	export const parent:any = '';
 
 	const modalStore = getModalStore();
 	const drawerStore = getDrawerStore();
@@ -85,28 +85,28 @@
 </script>
 
 <div
-	class="flex md:flex-col bg-slate-50 max-w-[95%] md:max-w-[60%] max-h-[60%] rounded-lg p-4 relative"
+	class="flex md:flex-col bg-slate-50 max-w-[95%] md:max-w-[60%] h-full rounded-lg p-4 relative"
 >
 	<button class="absolute -top-4 -right-2 w-7" on:click={closeModal}>
 		{@html icons.closeMark}
 	</button>
-	<div class="flex flex-col justify-center items-start gap-3">
+	<div class="flex flex-col justify-center items-start gap-1 md:gap-3">
 		<div class="container px-[5%] md:px-[2%]">
-			<div class="grid md:grid-cols-2 gap-4">
+			<div class="grid md:grid-cols-2 gap-2 md:gap-4">
 				<div class="image-section flex justify-center items-center">
 					<a data-sveltekit-preload-data href="/{data.id}" on:click={closeModal}>
 						<Image
 							loading="lazy"
 							src={data.image}
 							alt={data.title}
-							class="max-w-60 object-scale-down"
+							class="w-32 md:max-w-60 object-scale-down"
 						/>
 					</a>
 				</div>
-				<div class="flex flex-col justify-center gap-3 py-5">
-					<div class="flex flex-col gap-3">
+				<div class="flex flex-col justify-center gap-1 md:gap-3 py-5">
+					<div class="flex flex-col gap-2 md:gap-3">
 						<div class="flex flex-col gap-1">
-							<span class="text-3xl font-bold">
+							<span class="text-2xl md:text-3xl font-bold line-clamp-3">
 								<a data-sveltekit-preload-data href="/{data.id}" on:click={closeModal}>
 									{data.title}</a
 								>
@@ -130,10 +130,10 @@
 							<span>{data.rating.count} ratings</span>
 						</div>
 						<span class="text-3xl font-bold">${parseFloat(data.price).toFixed(2)}</span>
-						<div class="flex justify-start gap-6">
+						<div class="flex justify-start gap-3 md:gap-6">
 							{#key quantity}
 								{#if quantity > 0}
-									<div class="flex flex-col gap-4">
+									<div class="flex flex-col gap-2 md:gap-4">
 										<AddRemoveItem
 											bind:value={quantity}
 											on:decrement={removeFromCart}
