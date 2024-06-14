@@ -1,22 +1,15 @@
 import { writable } from 'svelte/store';
-import { browser } from "$app/environment";
+import { browser } from '$app/environment';
 
-interface Product {
-  id: number;
-  name: string;
-  price: string;
-  count: number;
-  image:string;
-}
+import type { CartProduct } from '$lib/interface';
 
 // Retrieve cart items from localStorage if in browser environment, otherwise default to an empty array
 const cartItemsFromStorage = browser ? localStorage.getItem('cartItems') || '[]' : '[]';
 
-const initialCartItems: Product[] = JSON.parse(cartItemsFromStorage);
+const initialCartItems: CartProduct[] = JSON.parse(cartItemsFromStorage);
 
-export const items = writable<Product[]>(initialCartItems);
+export const items = writable<CartProduct[]>(initialCartItems);
 
-if(browser) {
-
-  items.subscribe((value) => localStorage.cartItems = JSON.stringify(value))
+if (browser) {
+	items.subscribe((value) => (localStorage.cartItems = JSON.stringify(value)));
 }

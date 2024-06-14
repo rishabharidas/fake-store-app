@@ -6,32 +6,19 @@
 	import Image from '../components/Image.svelte';
 
 	import { onMount, getContext } from 'svelte';
-	import { type Writable } from 'svelte/store';
 	import { toast } from '@zerodevx/svelte-toast';
 
+	import { type Writable } from 'svelte/store';
+	import type { productInfo } from '$lib/interface';
 	interface Data {
 		categories: string[];
 		productsCount: number;
 	}
 
-	interface Rating {
-		rate: number;
-		count: number;
-	}
-	interface productsData {
-		id: number;
-		title: string;
-		price: string;
-		category: string;
-		description: string;
-		rating: Rating;
-		image: string;
-	}
-
 	export let data: Data;
 	$: hasMore = data.productsCount > pageLimit ? true : false;
 
-	let products: productsData[] = [];
+	let products: productInfo[] = [];
 	let storeCategories: string[] = data.categories;
 	let category: string = 'all';
 	let pageLimit: number = 10;
@@ -227,6 +214,3 @@
 		</div>
 	</div>
 </div>
-
-<style lang="postcss">
-</style>

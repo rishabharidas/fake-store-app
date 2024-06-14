@@ -3,16 +3,10 @@
 	import AddRemoveItem from './AddRemoveItem.svelte';
 	import Image from './Image.svelte';
 
-	interface Product {
-		id: number;
-		name: string;
-		price: string;
-		count: number;
-		image: string;
-	}
+	import type { CartProduct } from '$lib/interface';
 
-	export let cartItem: Product;
-	let cartProductInfo: Product | undefined;
+	export let cartItem: CartProduct;
+	let cartProductInfo: CartProduct | undefined;
 
 	items.subscribe((value) => {
 		cartProductInfo = value.find((item) => item.id == cartItem.id);
@@ -39,7 +33,7 @@
 				}
 				return item;
 			})
-			.filter((item) => item !== null) as Product[];
+			.filter((item) => item !== null) as CartProduct[];
 
 		items.set(updatedItems);
 	}

@@ -6,25 +6,13 @@
 	import Image from './Image.svelte';
 	import { scale } from 'svelte/transition';
 	import ProductPopup from './ProductPopup.svelte';
+
 	import type { ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
+	import type { productInfo } from '$lib/interface';
 
 	const dispatch = createEventDispatcher();
 	const modalStore: ModalStore = getModalStore();
 
-	interface Rating {
-		rate: number;
-		count: number;
-	}
-
-	interface productInfo {
-		id: number;
-		title: string;
-		price: string;
-		category: string;
-		description: string;
-		rating: Rating;
-		image: string;
-	}
 	export let productData: productInfo;
 	const modalComponent: ModalComponent = { ref: ProductPopup, props: { data: productData } };
 
@@ -33,7 +21,6 @@
 	}
 
 	function showPreviewPopUp() {
-		console.log('heee');
 		modalStore.trigger({
 			type: 'component',
 			component: modalComponent
@@ -48,7 +35,7 @@
 	<a
 		data-sveltekit-preload-data
 		href="/{productData.id}"
-		class="w-[50%] bg-white h-full md:h-[50%] md:w-auto flex justify-center"
+		class="w-[50%] bg-white h-full md:h-[50%] md:w-full flex justify-center"
 		on:click|stopPropagation
 	>
 		<Image src={productData.image} alt={productData.title} class="object-contain px-2" />
@@ -101,4 +88,5 @@
 	transitionOut={scale}
 	transitionOutParams={{ duration: 400 }}
 	transitionInParams={{ duration: 400 }}
+	regionBackdrop="bg-black/[0.15]"
 />

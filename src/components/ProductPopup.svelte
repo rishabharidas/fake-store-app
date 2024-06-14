@@ -7,30 +7,11 @@
 	import AddRemoveItem from './AddRemoveItem.svelte';
 	import Image from './Image.svelte';
 
-	interface Rating {
-		rate: number;
-		count: number;
-	}
-
-	interface productInfo {
-		id: number;
-		title: string;
-		price: string;
-		category: string;
-		description: string;
-		rating: Rating;
-		image: string;
-	}
-
-	interface CartProduct {
-		id: number;
-		name: string;
-		price: string;
-		count: number;
-		image: string;
-	}
+	import type { productInfo, CartProduct } from '$lib/interface';
 
 	export let data: productInfo;
+	export let parent: any;
+
 	const modalStore = getModalStore();
 	const drawerStore = getDrawerStore();
 
@@ -112,7 +93,7 @@
 	<div class="flex flex-col justify-center items-start gap-3">
 		<div class="container px-[5%] md:px-[2%]">
 			<div class="grid md:grid-cols-2 gap-4">
-				<div class="image-section flex justify-center">
+				<div class="image-section flex justify-center items-center">
 					<a data-sveltekit-preload-data href="/{data.id}" on:click={closeModal}>
 						<Image
 							loading="lazy"

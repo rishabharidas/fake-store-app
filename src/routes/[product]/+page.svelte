@@ -9,28 +9,7 @@
 	import Image from '../../components/Image.svelte';
 	import { toast } from '@zerodevx/svelte-toast';
 
-	interface Rating {
-		rate: number;
-		count: number;
-	}
-
-	interface productInfo {
-		id: number;
-		title: string;
-		price: string;
-		category: string;
-		description: string;
-		rating: Rating;
-		image: string;
-	}
-
-	interface CartProduct {
-		id: number;
-		name: string;
-		price: string;
-		count: number;
-		image: string;
-	}
+	import type { productInfo, CartProduct } from '$lib/interface';
 
 	export let data: productInfo;
 
@@ -124,7 +103,7 @@
 	<div class="flex justify-center items-start gap-3 pt-6">
 		<div class="container px-[5%] md:px-[2%]">
 			<div class="grid md:grid-cols-2 gap-4">
-				<div class="image-section flex justify-center">
+				<div class="image-section flex justify-center items-center">
 					<Image loading="lazy" src={data.image} alt={data.title} class="w-96 object-scale-down" />
 				</div>
 				<div class="flex flex-col gap-3 py-10">
