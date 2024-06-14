@@ -8,15 +8,15 @@
 	});
 </script>
 
-<div class="flex flex-col gap-3 relative justify-between h-full">
-	<div class="flex flex-col gap-3 h-[70%] overflow-x-auto">
+<div class="flex flex-col gap-3 relative justify-between h-full overflow-x-auto">
+	<div class="flex flex-col gap-3 h-auto ">
 		{#if $items.length}
 			{#each $items as item}
 				<CartItem cartItem={item} />
 			{/each}
 		{/if}
 	</div>
-	<div class="w-auto flex flex-col gap-4">
+	<div class="w-full flex flex-col gap-4 absolute bottom-0">
 		<div class="p-4 border border-slate-500">
 			<span class="text-2xl font-base">
 				Total: <span class="font-semibold">$ {formatMoney(totalAmount.toString())}</span>

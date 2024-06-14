@@ -78,7 +78,9 @@
 		<AppBar shadow="shadow-2xl" padding="py-3 px-3 md:px-[9%]" background="bg-slate-400">
 			<svelte:fragment slot="lead">
 				<a data-sveltekit-preload-data href="/">
-					<strong class="text-xl text-[#4800A3] font-sans tracking-tight capitalize italic">Fake Store</strong>
+					<strong class="text-xl text-[#4800A3] font-sans tracking-tight capitalize italic"
+						>Fake Store</strong
+					>
 				</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
@@ -117,13 +119,14 @@
 <Drawer
 	bgDrawer="bg-slate-200 text-black"
 	width="w-[280px] md:w-[480px]"
+	height="h-full"
 	padding="p-2"
 	rounded="rounded-lg"
 	position="right"
 >
-	<div class="card h-[98vh]">
-		<div class="card-header">
-			<span class="text-3xl flex items-center py-3">
+	<div class="card h-full">
+		<div class="h-[10%] px-4 py-2 flex justify-start items-center">
+			<span class="text-3xl flex items-center">
 				<svg
 					class="w-12 h-12 text-gray-800 dark:text-white"
 					aria-hidden="true"
@@ -143,9 +146,9 @@
 				</svg>
 				Cart
 			</span>
-			<hr />
 		</div>
-		<div class="p-4 h-[90%]">
+		<hr />
+		<div class="px-4 pb-2 pt-4 h-[90%]">
 			<Cart />
 		</div>
 	</div>

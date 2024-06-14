@@ -23,7 +23,7 @@
 	>
 		-
 	</button>
-	<input type="text" class="input {inputClass} rounded-lg" bind:value />
+	<input type="text" class="input {inputClass} rounded-lg" bind:value readonly/>
 	<button class="variant-filled {buttonClass} text-2xl font-bold rounded-lg" on:click={addItem}>
 		+
 	</button>
