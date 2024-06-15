@@ -126,7 +126,7 @@
 </div>
 <Drawer
 	bgDrawer="bg-slate-200 text-black"
-	width="w-[280px] md:w-[480px]"
+	width="w-[320px] md:w-[480px]"
 	height="h-full"
 	padding="p-2"
 	rounded="rounded-lg"
@@ -156,7 +156,7 @@
 			</span>
 		</div>
 		<hr />
-		<div class="px-4 pb-2 pt-4 h-[90%]">
+		<div class="px-4 pb-2 pt-4 h-[89%]">
 			<Cart />
 		</div>
 	</div>
