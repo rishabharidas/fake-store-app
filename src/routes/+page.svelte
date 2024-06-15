@@ -140,7 +140,6 @@
 			alt="banner"
 			class="object-cover w-screen"
 		/>
-		tests
 		<div class="w-full h-full absolute bg-[#cccccc9e]"></div>
 		<div class="w-full absolute flex justify-center bottom-[45%]">
 			<h1
