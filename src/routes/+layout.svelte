@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { searchStore } from '$lib/store/searchStore';
 	import '../app.postcss';
 	import { AppBar, initializeStores, Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
-	import { onMount, setContext } from 'svelte';
+	import { onMount, setContext, createEventDispatcher } from 'svelte';
 	import { writable } from 'svelte/store';
 
 	// Highlight JS
@@ -20,12 +21,14 @@
 	storeHighlightJs.set(hljs);
 	initializeStores();
 	let scrollContainer: HTMLDivElement;
+	const dispatch = createEventDispatcher();
 
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
 	import { items } from '$lib/store/cart';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
+	import { icons } from '$lib/utils/icons';
 
 	import Cart from '../components/Cart.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
@@ -37,6 +40,8 @@
 	} | null>(null);
 
 	let cartItemsCount: number = 0;
+	let onSearch: boolean = false;
+	let searchKey: string = '';
 
 	function runEvent() {
 		if (scrollContainer) {
@@ -70,46 +75,63 @@
 	function openDrawer() {
 		drawerStore.open();
 	}
+
+	let searchFunc: Function;
+
+	searchStore.subscribe((value) => {
+		searchFunc = value.searchItems;
+	});
+
+	function searchItems() {
+		searchFunc();
+	}
 </script>
 
 <div class="w-full h-full flex flex-col overflow-hidden">
 	<header>
-		<!-- App Bar -->
-		<AppBar shadow="shadow-2xl" padding="py-3 px-3 md:px-[9%]" background="bg-slate-400">
-			<svelte:fragment slot="lead">
-				<a data-sveltekit-preload-data href="/" class="touch-styler">
-					<strong class="text-xl text-[#4800A3] font-sans tracking-tight capitalize italic"
-						>Fake Store</strong
+		<div class="shadow-2xl bg-slate-400 w-full flex justify-center items-center">
+			<div class="container py-3 px-3 gap-2 flex justify-between">
+				<div class="{onSearch ? 'hidden md:flex' : 'flex'} items-center justify-center">
+					<a
+						data-sveltekit-preload-data
+						href="/"
+						class="touch-styler {onSearch ? 'hidden md:block' : 'block'}"
 					>
-				</a>
-			</svelte:fragment>
-			<svelte:fragment slot="trail">
-				<button class="relative inline-block touch-styler" on:click={openDrawer}>
-					<span class="badge-icon variant-filled-warning absolute -top-0 -right-0 z-10"
-						>{cartItemsCount}</span
+						<strong class="text-xl text-[#4800A3] font-sans tracking-tight capitalize italic">
+							Fake Store
+						</strong>
+					</a>
+				</div>
+
+				<div class="flex justify-between items-center gap-3 {onSearch ? 'w-full md:w-[70%] ' : 'w-[70%]'}">
+					<input
+						class="input rounded-lg w-full"
+						placeholder="Search Items"
+						bind:value={$searchStore.searchValue}
+						on:click={() => (onSearch = true)}
+						on:keypress={(e) => (e.key == 'Enter' ? searchItems() : '')}
+						on:blur={() => (onSearch = false)}
+					/>
+					<button
+						class="{onSearch ? 'block' : 'hidden md:block'} btn btn-sm px-0"
+						on:click={searchItems}
 					>
-					<div class="btn btn-sm">
-						<svg
-							class="w-7 h-7 text-gray-800 dark:text-white"
-							aria-hidden="true"
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="24"
-							fill="none"
-							viewBox="0 0 24 24"
+						<span>{@html icons.searchIcon}</span>
+					</button>
+					<button
+						class="{onSearch ? 'hidden md:block' : ''} relative inline-block touch-styler"
+						on:click={openDrawer}
+					>
+						<span class="badge-icon variant-filled-warning absolute -top-0 -right-0 z-10"
+							>{cartItemsCount}</span
 						>
-							<path
-								stroke="currentColor"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
-							/>
-						</svg>
-					</div>
-				</button>
-			</svelte:fragment>
-		</AppBar>
+						<div class="btn btn-sm pl-0">
+							{@html icons.cartIcon}
+						</div>
+					</button>
+				</div>
+			</div>
+		</div>
 	</header>
 	<!-- Page Route Content -->
 	<div

@@ -1,12 +1,14 @@
 <!-- YOU CAN DELETE EVERYTHING IN THIS PAGE -->
 
 <script lang="ts">
+	import { capitalize } from '$lib/utils/common';
 	import ProductCard from '../components/ProductCard.svelte';
 	import CardPlaceHolder from '../components/CardPlaceHolder.svelte';
 	import Image from '../components/Image.svelte';
 
 	import { onMount, getContext } from 'svelte';
 	import { toast } from '@zerodevx/svelte-toast';
+	import { setSearchFunction, searchStore } from '$lib/store/searchStore';
 
 	import { type Writable } from 'svelte/store';
 	import type { productInfo } from '$lib/interface';
@@ -68,6 +70,7 @@
 	const debouncedHandleScrollEvent = debounce(handleScrollEvent, 200);
 
 	onMount(() => {
+		setSearchFunction(searchItems);
 		getProducts();
 		const unsubscribe = scrollEventStore.subscribe((value) => {
 			if (value) {
@@ -91,15 +94,20 @@
 		};
 	}
 
-	async function getProducts(scrollEvent?: boolean) {
+	async function getProducts(scrollEvent?: boolean, searchEvent?: boolean) {
 		if (scrollEvent && hasMore) {
 			scrollLoading = true;
 		} else loading = true;
 		try {
 			await fetch(
-				`https://fakestoreapi.com/products${category !== 'all' ? `/category/${category}` : ''}?limit=${pageLimit}`
+				`https://fakestoreapi.com/products${category !== 'all' ? `/category/${category}` : ''}${searchEvent ? '' : `?limit=${pageLimit}`}`
 			).then(async (res) => {
 				products = await res.json();
+				if (searchEvent || $searchStore.searchValue) {
+					products = products.filter((item) => {
+						return item.title.toLowerCase().includes($searchStore.searchValue.toLowerCase());
+					});
+				}
 				sort = 'default';
 			});
 		} catch (err) {
@@ -128,8 +136,10 @@
 		}
 	}
 
-	function capitalize(str: string): string {
-		return str.charAt(0).toUpperCase() + str.slice(1);
+	function searchItems() {
+		getProducts(false, true);
+		data.productsCount = products.length
+		// hasMore = false;
 	}
 </script>
 
