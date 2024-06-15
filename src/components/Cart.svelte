@@ -8,7 +8,7 @@
 	});
 </script>
 
-<div class="flex flex-col gap-3 relative justify-between h-full overflow-hidden">
+<div class="flex flex-col gap-3 justify-between h-full overflow-hidden">
 	<div class="flex flex-col gap-3 h-[80%] overflow-y-auto px-3">
 		{#if $items.length}
 			{#each $items as item}
@@ -18,7 +18,7 @@
 			{/each}
 		{/if}
 	</div>
-	<div class="w-full flex flex-col gap-3 pt-5 absolute bottom-0 h-[20%] px-3">
+	<div class="w-full flex flex-col gap-3 mt-2 px-3">
 		<div class="p-3 border border-slate-500 rounded-lg">
 			<span class="text-2xl font-base">
 				Total: <span class="font-semibold">$ {formatMoney(totalAmount.toString())}</span>
