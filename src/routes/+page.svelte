@@ -103,7 +103,7 @@
 				`https://fakestoreapi.com/products${category !== 'all' ? `/category/${category}` : ''}${searchEvent ? '' : `?limit=${pageLimit}`}`
 			).then(async (res) => {
 				products = await res.json();
-				if (searchEvent || $searchStore.searchValue) {
+				if (searchEvent) {
 					products = products.filter((item) => {
 						return item.title.toLowerCase().includes($searchStore.searchValue.toLowerCase());
 					});
@@ -137,7 +137,7 @@
 	}
 
 	function searchItems() {
-		getProducts(false, true);
+		getProducts(false, !!$searchStore.searchValue);
 		data.productsCount = products.length
 		// hasMore = false;
 	}
