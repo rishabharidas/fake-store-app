@@ -103,18 +103,24 @@
 					</a>
 				</div>
 
-				<div class="flex justify-between items-center gap-3 {onSearch ? 'w-full md:w-[70%] ' : 'w-[70%]'}">
+				<div
+					class="flex justify-between items-center gap-3 {onSearch
+						? 'w-full md:w-[70%] '
+						: 'w-[70%]'}"
+				>
 					<input
 						class="input rounded-lg w-full"
 						placeholder="Search Items"
 						bind:value={$searchStore.searchValue}
 						on:click={() => (onSearch = true)}
 						on:keypress={(e) => (e.key == 'Enter' ? searchItems() : '')}
-						on:blur={() => (onSearch = false)}
 					/>
 					<button
 						class="{onSearch ? 'block' : 'hidden md:block'} btn btn-sm px-0"
-						on:click={searchItems}
+						on:click={() => {
+							searchItems();
+							onSearch = false;
+						}}
 					>
 						<span>{@html icons.searchIcon}</span>
 					</button>
