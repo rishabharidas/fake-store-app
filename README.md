@@ -1,22 +1,18 @@
-# create-svelte
+# fake-store App
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+You can see the Preview for this project [here](https://fake-store-app-lake.vercel.app/)
 
-## Creating a project
+this Project utilizes [fakestoreapi](https://fakestoreapi.com/) as mock data. Refer for more details.
 
-If you're seeing this, you've probably already done this step. Congrats!
+### Libraries and Frameworks used:
+ - [SvelteKit](https://kit.svelte.dev/) 
+ - [Skeleton UI toolkit](https://www.skeleton.dev/)
+ - [Tailwind](https://tailwindcss.com/)
+ - [svelte-toast](https://github.com/zerodevx/svelte-toast)
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## For Devlopmnet 
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+After cloning install dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
 npm run dev
@@ -27,7 +23,7 @@ npm run dev -- --open
 
 ## Building
 
-To create a production version of your app:
+To create a production version of app:
 
 ```bash
 npm run build
@@ -36,3 +32,4 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+> This project is automatically deloyed to [vercel](https://vercel.com/) with github actions as CI/CD workflow
