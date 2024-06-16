@@ -8,6 +8,7 @@
 	import AddRemoveItem from '../../components/AddRemoveItem.svelte';
 	import Image from '../../components/Image.svelte';
 	import { toast } from '@zerodevx/svelte-toast';
+	import { api } from '$lib/api';
 
 	import type { productInfo, CartProduct } from '$lib/interface';
 
@@ -36,13 +37,19 @@
 		};
 	});
 
+	// Function to add an item to the cart
 	function addToCart() {
+		// Find the index of the item in the cart
 		const itemIndex = $items.findIndex((item) => item.id == data.id);
 		if (itemIndex !== -1) {
+			// If the item is already in the cart, increment its count
+
 			const updatedItems = [...$items];
 			updatedItems[itemIndex].count++;
 			items.set(updatedItems);
 		} else {
+			// If the item is not in the cart, add it with count 1
+
 			items.update((currentItems) => [
 				...currentItems,
 				{
@@ -56,6 +63,7 @@
 		}
 	}
 
+	// Function to remove an item from the cart
 	function removeFromCart() {
 		const updatedItems = $items
 			.map((item) => {
@@ -74,20 +82,18 @@
 		items.set(updatedItems);
 	}
 
+	// Update the cart with the filtered items
 	function openCart() {
 		drawerStore.open();
 	}
 
 	onMount(async () => {
 		try {
-			await fetch(`https://fakestoreapi.com/products/category/${data.category}`).then(
-				async (res) => {
-					const response = await res.json();
-					categoryData = response.filter((item: productInfo) => item.id != data.id).slice(0, 4);
-				}
-			);
+			let response: productInfo[] = (await api(`/category/${data.category}`)) ?? [];
+			categoryData = response.filter((item: productInfo) => item.id != data.id).slice(0, 4);
 		} catch (err) {
 			console.log(err);
+			// Display error toast notification
 			toast.push('Something went wrong. Please try again later', {
 				theme: {
 					'--toastColor': '#ffffff',
@@ -104,7 +110,12 @@
 		<div class="container px-[5%] md:px-[2%]">
 			<div class="grid md:grid-cols-2 gap-4 place-items-center">
 				<div class="image-section flex justify-center items-center w-64 h-64 md:w-96 md:h-96">
-					<Image loading="lazy" src={data.image} alt={data.title} class=" w-64 h-64 md:w-96 md:h-96 object-scale-down" />
+					<Image
+						loading="lazy"
+						src={data.image}
+						alt={data.title}
+						class=" w-64 h-64 md:w-96 md:h-96 object-scale-down"
+					/>
 				</div>
 				<div class="flex flex-col gap-3 py-10">
 					<div class="flex flex-col gap-3">

@@ -1,10 +1,12 @@
 // export const ssr = false;
+import { api } from '$lib/api';
+
+// Function to fetch product details by product ID
 async function getProductDetails(id: string) {
 	let response;
 	try {
-		await fetch(`https://fakestoreapi.com/products/${id}`).then(
-			async (res) => (response = await res.json())
-		);
+		// Make an API call to fetch product details
+		response = await api(`/${id}`);
 	} catch (err) {
 		console.log(err);
 	}

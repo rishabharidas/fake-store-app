@@ -24,6 +24,7 @@
 	});
 </script>
 
+<!-- Image componet which supports loading, crash image and all image properities (like a base componet) -->
 {#if loaded}
 	<img {...$$restProps} {src} alt="Document" />
 {:else if failed}

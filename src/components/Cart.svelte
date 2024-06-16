@@ -7,7 +7,7 @@
 		totalAmount = value.reduce((total, item) => total + Number(item.price) * item.count, 0);
 	});
 </script>
-
+<!-- Entire Cart Component  -->
 <div class="flex flex-col gap-3 justify-between h-full overflow-hidden">
 	<div class="flex flex-col gap-3 h-[80%] overflow-y-auto px-3">
 		{#if $items.length}

@@ -1,16 +1,18 @@
+import { api } from '$lib/api.js';
+import type { productInfo } from '$lib/interface';
+
 export const load = async ({ params }) => {
-	let categories;
+	let categories: string[] = [];
 	let productsCount: number = 0;
 	try {
-		await fetch('https://fakestoreapi.com/products/categories').then(async (res) => {
-			categories = await res.json();
-			categories.push('all');
-			categories.sort((a: string, b: string) => a.localeCompare(b));
-		});
-		await fetch(`https://fakestoreapi.com/products`).then(async (res) => {
-			let products = await res.json();
-			productsCount = products.length;
-		});
+		// Fetch the list of categories from the API
+		categories = (await api('/categories')) ?? [];
+		categories.push('all');
+		categories.sort((a: string, b: string) => a.localeCompare(b));
+
+		// Fetch the list of products from the API for totalcount
+		let products: productInfo[] = (await api('')) ?? [];
+		productsCount = products.length;
 	} catch (err) {
 		console.log(err);
 	}

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { formatMoney, capitalize } from '$lib/utils/common';
+import { api } from '$lib/api';
 
 // Test the formatMoney function
 describe('formatMoney', () => {
@@ -15,3 +16,9 @@ describe('capitalize', () => {
     expect(capitalize('Text string')).toBe('Text string');
   });
 });
+
+describe('api function', () => {
+  it('should return products data', async () => {
+    expect(await api('')).toBeTypeOf("object")
+  })
+})

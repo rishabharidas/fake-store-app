@@ -33,6 +33,7 @@
 	import Cart from '../components/Cart.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
+	// Create a writable store to hold scroll event details
 	const scrollEventStore = writable<{
 		scrollTop: number;
 		scrollHeight: number;
@@ -43,16 +44,19 @@
 	let onSearch: boolean = false;
 	let searchKey: string = '';
 
+	// Function to handle scroll events and update the scrollEventStore
 	function runEvent() {
 		if (scrollContainer) {
 			const scrollTop = scrollContainer.scrollTop;
 			const scrollHeight = scrollContainer.scrollHeight;
 			const clientHeight = scrollContainer.clientHeight;
 
+			// Update the scrollEventStore with the latest scroll details
 			scrollEventStore.set({ scrollTop, scrollHeight, clientHeight });
 		}
 	}
 
+	// Subscribe to items store and update cartItemsCount accordingly
 	items.subscribe((value) => {
 		cartItemsCount = value.length ?? 0;
 	});
@@ -61,9 +65,11 @@
 
 	onMount(() => {
 		if (scrollContainer) {
+			// Add the scroll event listener to the scrollContainer
 			scrollContainer.addEventListener('scroll', runEvent);
 		}
 
+		// Cleanup function to remove the scroll event listener when the component is destroyed
 		return () => {
 			if (scrollContainer) {
 				scrollContainer.removeEventListener('scroll', runEvent);
@@ -72,12 +78,14 @@
 	});
 	const drawerStore = getDrawerStore();
 
+	// Function to open the drawer using the drawer store
 	function openDrawer() {
 		drawerStore.open();
 	}
 
 	let searchFunc: Function;
-
+	
+	// Subscribe to the searchStore and update searchFunc with the searchItems function
 	searchStore.subscribe((value) => {
 		searchFunc = value.searchItems;
 	});

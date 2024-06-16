@@ -14,12 +14,15 @@
 
 	let quantity: number = cartProductInfo?.count ?? 0;
 
+	// Function to add an item to the cart
 	function addToCart() {
 		if ($items.find((item) => item.id == cartItem.id)) {
+			// Increment the count of the existing item in the cart
 			$items[$items.findIndex((item) => item.id == cartItem.id)].count++;
 		}
 	}
 
+	// Function to remove an item from the cart
 	function removeFromCart() {
 		const updatedItems = $items
 			.map((item) => {
@@ -35,10 +38,12 @@
 			})
 			.filter((item) => item !== null) as CartProduct[];
 
+		// Update the cart with the filtered items
 		items.set(updatedItems);
 	}
 </script>
 
+<!-- Cart item Component -->
 <div class="flex justify-center items-center gap-3 bg-gray-300 rounded-lg px-2 max-h-[100px]">
 	<div class="w-[40%] flex justify-center items-center object-contain h-auto">
 		<Image

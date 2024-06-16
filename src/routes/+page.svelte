@@ -9,6 +9,7 @@
 	import { onMount, getContext } from 'svelte';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { setSearchFunction, searchStore } from '$lib/store/searchStore';
+	import { api } from '$lib/api';
 
 	import { type Writable } from 'svelte/store';
 	import type { productInfo } from '$lib/interface';
@@ -37,12 +38,14 @@
 		{ type: 'price_h-l', label: 'Price High to Low' }
 	];
 
+	// Type definition for scrollEventStore
 	const scrollEventStore: Writable<{
 		scrollTop: number;
 		scrollHeight: number;
 		clientHeight: number;
 	} | null> = getContext('scrollEventStore');
 
+	// Function to handle scroll events
 	function handleScrollEvent({
 		scrollTop,
 		scrollHeight,
@@ -83,6 +86,7 @@
 		};
 	});
 
+	// Debounce utility function
 	function debounce<T extends (...args: any[]) => void>(
 		func: T,
 		delay = 200
@@ -94,24 +98,25 @@
 		};
 	}
 
+	// function to get store products
 	async function getProducts(scrollEvent?: boolean, searchEvent?: boolean) {
 		if (scrollEvent && hasMore) {
 			scrollLoading = true;
 		} else loading = true;
 		try {
-			await fetch(
-				`https://fakestoreapi.com/products${category !== 'all' ? `/category/${category}` : ''}${searchEvent ? '' : `?limit=${pageLimit}`}`
-			).then(async (res) => {
-				products = await res.json();
-				if (searchEvent) {
-					products = products.filter((item) => {
-						return item.title.toLowerCase().includes($searchStore.searchValue.toLowerCase());
-					});
-				}
-				sort = 'default';
-			});
+			products =
+				(await api(
+					`${category !== 'all' ? `/category/${category}` : ''}${searchEvent ? '' : `?limit=${pageLimit}`}`
+				)) ?? [];
+			if (searchEvent) {
+				products = products.filter((item) => {
+					return item.title.toLowerCase().includes($searchStore.searchValue.toLowerCase());
+				});
+			}
+			sort = 'default';
 		} catch (err) {
 			console.log(err);
+			// Display error toast notification
 			toast.push('Something went wrong. Please try again later', {
 				theme: {
 					'--toastColor': '#ffffff',
@@ -124,6 +129,7 @@
 		scrollLoading = false;
 	}
 
+	// Function to sort products based on various criteria
 	function sortBy() {
 		if (sort === 'popular') {
 			products = products.sort((item1, item2) => item2.rating.rate - item1.rating.rate);
@@ -132,7 +138,7 @@
 		} else if (sort === 'price_h-l') {
 			products = products.sort((item1, item2) => Number(item2.price) - Number(item1.price));
 		} else {
-			getProducts();
+			getProducts(); // Fetch products if sort is default
 		}
 	}
 

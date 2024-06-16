@@ -20,6 +20,7 @@
 		dispatch('categorySelect', category);
 	}
 
+	// function to open popup to add item quicky without going to details page
 	function showPreviewPopUp() {
 		modalStore.trigger({
 			type: 'component',
@@ -28,6 +29,7 @@
 	}
 </script>
 
+<!-- Product Card component -->
 <button
 	class="card shadow-lg hover:shadow-xl hover:drop-shadow-2xl rounded-xl flex gap-2 h-[250px] md:flex-col md:h-[500px] overflow-hidden touch-styler w-full"
 	on:click|preventDefault={showPreviewPopUp}
