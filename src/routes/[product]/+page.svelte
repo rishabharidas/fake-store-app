@@ -5,6 +5,7 @@
 	import { icons } from '$lib/utils/icons';
 	import { onMount } from 'svelte';
 	import ProductCard from '../../components/ProductCard.svelte';
+	import CardPlaceHolder from '../../components/CardPlaceHolder.svelte';
 	import AddRemoveItem from '../../components/AddRemoveItem.svelte';
 	import Image from '../../components/Image.svelte';
 	import { toast } from '@zerodevx/svelte-toast';
@@ -19,6 +20,7 @@
 	let categoryData: productInfo[] = [];
 	let cartProductInfo: CartProduct | undefined;
 	let quantity: number = 0;
+	let productsLoading: boolean = false;
 
 	// Function to update cartProductInfo and quantity reactively
 	function updateCartProductInfo(value) {
@@ -28,6 +30,26 @@
 
 	// Set up subscription on mount and clean up on destroy
 	onMount(() => {
+		const fetchData = async () => {
+			productsLoading = true;
+			try {
+				let response: productInfo[] = (await api(`/category/${data.category}`)) ?? [];
+				categoryData = response.filter((item: productInfo) => item.id !== data.id).slice(0, 4);
+			} catch (err) {
+				console.error(err);
+				// Display error toast notification
+				toast.push('Something went wrong. Please try again later', {
+					theme: {
+						'--toastColor': '#ffffff',
+						'--toastBackground': 'rgba(255, 50, 65, 0.8)',
+						'--toastBarBackground': '#a3a3a3'
+					}
+				});
+			}
+			productsLoading = false;
+		};
+
+		fetchData();
 		const unsubscribe = items.subscribe((value) => {
 			updateCartProductInfo(value);
 		});
@@ -86,23 +108,6 @@
 	function openCart() {
 		drawerStore.open();
 	}
-
-	onMount(async () => {
-		try {
-			let response: productInfo[] = (await api(`/category/${data.category}`)) ?? [];
-			categoryData = response.filter((item: productInfo) => item.id != data.id).slice(0, 4);
-		} catch (err) {
-			console.log(err);
-			// Display error toast notification
-			toast.push('Something went wrong. Please try again later', {
-				theme: {
-					'--toastColor': '#ffffff',
-					'--toastBackground': 'rgba(255, 50, 65, 0.8)',
-					'--toastBarBackground': '#a3a3a3'
-				}
-			});
-		}
-	});
 </script>
 
 <div class="flex flex-col">
@@ -172,17 +177,23 @@
 				<div class="flex justify-between py-6">
 					<span class="font-bold text-2xl">Similar Products</span>
 					<a data-sveltekit-preload-data href="/" class="btn variant-filled rounded-lg">
-						View all products
+						View all
 					</a>
 				</div>
 				<div class="flex flex-col md:flex-row gap-6 w-full md:w-auto md:overflow-x-auto">
-					{#each categoryData as product, index}
-						{#key index}
-							<div class="w-full md:w-64">
-								<ProductCard productData={product} />
-							</div>
-						{/key}
-					{/each}
+					{#if productsLoading}
+						{#each Array(4) as item}
+							<CardPlaceHolder />
+						{/each}
+					{:else}
+						{#each categoryData as product, index}
+							{#key index}
+								<div class="w-full md:w-56">
+									<ProductCard productData={product} />
+								</div>
+							{/key}
+						{/each}
+					{/if}
 				</div>
 			</div>
 		</div>

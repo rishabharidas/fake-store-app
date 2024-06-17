@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { searchStore } from '$lib/store/searchStore';
-	import '../app.postcss';
-	import { AppBar, initializeStores, Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
-	import { onMount, setContext, createEventDispatcher } from 'svelte';
 	import { writable } from 'svelte/store';
+	import { page } from '$app/stores';
+	
+	import '../app.postcss';
+	import { initializeStores, Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
+	import { onMount, setContext, createEventDispatcher } from 'svelte';
+	import { browser } from '$app/environment';
 
 	// Highlight JS
 	import hljs from 'highlight.js/lib/core';
@@ -42,7 +45,7 @@
 
 	let cartItemsCount: number = 0;
 	let onSearch: boolean = false;
-	let searchKey: string = '';
+	let currentPageId: string | null = null;
 
 	// Function to handle scroll events and update the scrollEventStore
 	function runEvent() {
@@ -84,11 +87,30 @@
 	}
 
 	let searchFunc: Function;
-	
+
 	// Subscribe to the searchStore and update searchFunc with the searchItems function
 	searchStore.subscribe((value) => {
 		searchFunc = value.searchItems;
 	});
+
+	// Function to be called when `page.route.id` changes
+	function scrollToTop() {
+		if (browser && scrollContainer) {
+			scrollContainer.scrollTo({
+				top: 0,
+				behavior: 'smooth'
+			});
+		}
+	}
+
+	$: {
+		$page; // This is a reactive statement that will run whenever $page changes
+
+		if ($page.route && $page.route.id !== currentPageId) {
+			currentPageId = $page.route.id;
+			scrollToTop();
+		}
+	}
 
 	function searchItems() {
 		searchFunc();
@@ -112,26 +134,28 @@
 				</div>
 
 				<div
-					class="flex justify-between items-center gap-3 {onSearch
-						? 'w-full md:w-[70%] '
-						: 'w-[70%]'}"
+					class="flex {$page.route.id === '/' ? 'justify-between' : 'justify-end'}
+						{onSearch ? 'w-full md:w-[70%] ' : 'w-[70%]'} 
+						items-center gap-3"
 				>
-					<input
-						class="input rounded-lg w-full"
-						placeholder="Search Items"
-						bind:value={$searchStore.searchValue}
-						on:click={() => (onSearch = true)}
-						on:keypress={(e) => (e.key == 'Enter' ? searchItems() : '')}
-					/>
-					<button
-						class="{onSearch ? 'block' : 'hidden md:block'} btn btn-sm px-0"
-						on:click={() => {
-							searchItems();
-							onSearch = false;
-						}}
-					>
-						<span>{@html icons.searchIcon}</span>
-					</button>
+					{#if $page.route.id === '/'}
+						<input
+							class="input rounded-lg w-full"
+							placeholder="Search Items"
+							bind:value={$searchStore.searchValue}
+							on:click={() => (onSearch = true)}
+							on:keypress={(e) => (e.key == 'Enter' ? searchItems() : '')}
+						/>
+						<button
+							class="{onSearch ? 'block' : 'hidden md:block'} btn btn-sm px-0"
+							on:click={() => {
+								searchItems();
+								onSearch = false;
+							}}
+						>
+							<span>{@html icons.searchIcon}</span>
+						</button>
+					{/if}
 					<button
 						class="{onSearch ? 'hidden md:block' : ''} relative inline-block touch-styler"
 						on:click={openDrawer}
