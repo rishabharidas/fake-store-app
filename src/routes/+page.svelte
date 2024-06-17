@@ -74,7 +74,7 @@
 
 	onMount(() => {
 		setSearchFunction(searchItems);
-		getProducts();
+		getProducts(false, !!$searchStore.searchValue);
 		const unsubscribe = scrollEventStore.subscribe((value) => {
 			if (value) {
 				debouncedHandleScrollEvent(value);

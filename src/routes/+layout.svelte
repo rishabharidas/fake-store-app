@@ -7,6 +7,7 @@
 	import { initializeStores, Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext, createEventDispatcher } from 'svelte';
 	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
 
 	// Highlight JS
 	import hljs from 'highlight.js/lib/core';
@@ -115,6 +116,12 @@
 	function searchItems() {
 		searchFunc();
 	}
+
+	// clear search value and call all products
+	function clearSearchStore() {
+		$searchStore.searchValue = '';
+		searchFunc()
+	}
 </script>
 
 <div class="w-full h-full flex flex-col overflow-hidden">
@@ -126,6 +133,7 @@
 						data-sveltekit-preload-data
 						href="/"
 						class="touch-styler {onSearch ? 'hidden md:block' : 'block'}"
+						on:click={clearSearchStore}
 					>
 						<strong class="text-xl text-[#4800A3] font-sans tracking-tight capitalize italic">
 							Fake Store
@@ -134,28 +142,31 @@
 				</div>
 
 				<div
-					class="flex {$page.route.id === '/' ? 'justify-between' : 'justify-end'}
+					class="flex
 						{onSearch ? 'w-full md:w-[70%] ' : 'w-[70%]'} 
 						items-center gap-3"
 				>
-					{#if $page.route.id === '/'}
-						<input
-							class="input rounded-lg w-full"
-							placeholder="Search Items"
-							bind:value={$searchStore.searchValue}
-							on:click={() => (onSearch = true)}
-							on:keypress={(e) => (e.key == 'Enter' ? searchItems() : '')}
-						/>
-						<button
-							class="{onSearch ? 'block' : 'hidden md:block'} btn btn-sm px-0"
-							on:click={() => {
+					<input
+						class="input rounded-lg w-full"
+						placeholder="Search Items"
+						bind:value={$searchStore.searchValue}
+						on:click={() => (onSearch = true)}
+						on:keypress={(e) => {
+							if (e.key == 'Enter') {
+								goto('/');
 								searchItems();
-								onSearch = false;
-							}}
-						>
-							<span>{@html icons.searchIcon}</span>
-						</button>
-					{/if}
+							}
+						}}
+					/>
+					<button
+						class="{onSearch ? 'block' : 'hidden md:block'} btn btn-sm px-0"
+						on:click={() => {
+							searchItems();
+							onSearch = false;
+						}}
+					>
+						<span>{@html icons.searchIcon}</span>
+					</button>
 					<button
 						class="{onSearch ? 'hidden md:block' : ''} relative inline-block touch-styler"
 						on:click={openDrawer}
